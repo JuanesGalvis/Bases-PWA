@@ -46,9 +46,24 @@ function ImprimirResultado( valorImprimir ) {
   setResult(valorImprimir.reverse().join(''));
 }
 
+function Share() {
+  if( ! navigator.share ) {
+    alert("Tu browser no soporta la Web Share API"); 
+    return;
+  }
+
+  navigator.share({
+    title: `App de Bases númericas`,
+    text: 'PWA para calcular bases numéricas',
+    url: document.location.href
+  })
+    .then(() => alert('Contenido compartido!'))
+    .catch((error) => alert('Hubo un error'))
+}
+
   return (
     <React.Fragment>
-      <h1>Convertidor de bases númericas</h1>
+      <h1>Convertidor de bases numéricas</h1>
       <header>
           <label htmlFor="original">
               Número: 
@@ -63,6 +78,7 @@ function ImprimirResultado( valorImprimir ) {
               <input id="baseFinal" onChange={ (BaseFinalInput) => { setBaseFinal(BaseFinalInput.target.value); } } type="number"/>
           </label>
           <button id="btn_calcular" onClick={VerificarValores} className="btn">🔢 Calcular 🔢</button>
+          <button onClick={Share} className="btn"> 🔄 Compartir 🔄 </button>
       </header>
       <main>
           <h2 id="result">{ Result ? `Resultado: ${Result}` : '' }</h2>
