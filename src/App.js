@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import './App.css';
 
+import Offline from './components/Offline';
+
 function App() {
 
   const [Original, setOriginal] = useState(0);
   const [BaseOriginal, setBaseOriginal] = useState(0);
   const [BaseFinal, setBaseFinal] = useState(0);
   const [Result, setResult] = useState(0);
+  const [isOffline, setisOffline] = useState(false);
 
   function VerificarValores() {
     if (Original > 0 && BaseOriginal > 0 && BaseFinal > 0) {
@@ -61,8 +64,17 @@ function Share() {
     .catch((error) => alert('Hubo un error'))
 }
 
+  window.addEventListener('online', () => {
+    setisOffline(false);
+  })
+
+  window.addEventListener('offline', () => {
+    setisOffline(true);
+  })
+
   return (
     <React.Fragment>
+      { isOffline ? <Offline></Offline> : '' }
       <h1>Convertidor de bases numéricas</h1>
       <header>
           <label htmlFor="original">
