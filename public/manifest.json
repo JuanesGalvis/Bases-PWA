@@ -3,12 +3,12 @@
   "name": "PWA de Cambio de bases númericas",
   "icons": [
     {
-      "src": "Logo192.png",
+      "src": "/Logo192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "Logo512.png",
+      "src": "/Logo512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
