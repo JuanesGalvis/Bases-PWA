@@ -12,6 +12,9 @@ function App() {
   const [isOffline, setisOffline] = useState(false);
 
   function VerificarValores() {
+
+    StartNotificacion();
+
     if (Original > 0 && BaseOriginal > 0 && BaseFinal > 0) {
 
       let NumeroDecimal = 0;
@@ -47,6 +50,7 @@ function App() {
 
 function ImprimirResultado( valorImprimir ) {
   setResult(valorImprimir.reverse().join(''));
+  ShowNotificacion(valorImprimir.reverse().join(''));
 }
 
 function Share() {
@@ -71,6 +75,40 @@ function Share() {
   window.addEventListener('offline', () => {
     setisOffline(true);
   })
+
+  /** PEDIR PERMISO PARA LAS NOTIFICACIONES */
+  async function StartNotificacion() {
+    
+    if( ! ('Notification' in window) || ! ('serviceWorker' in navigator) ) {
+      return alert('Tu browser no soporta notificaciones')
+    }
+
+    if( Notification.permission === 'default' ) {
+      await Notification.requestPermission()
+    }
+
+    if( Notification.permission === 'blocked' ) {
+      return alert("Bloqueaste las notificaciones :(")
+    }
+
+    if( Notification.permission !== 'granted' ) {
+      return;
+    }
+  }
+
+  async function ShowNotificacion(value) {
+    const registration = await navigator.serviceWorker.getRegistration()
+
+    if (!registration) {
+      alert("No hay un serviceWorker");
+      return;
+    }
+
+    registration.showNotification("Listo el resultado!", {
+      body: `El resultado fue: ${value}`,
+      img: '/icon-192x192.png'
+    })
+  }
 
   return (
     <React.Fragment>
