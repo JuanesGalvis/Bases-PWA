@@ -13,6 +13,31 @@ function App() {
 
   function VerificarValores() {
 
+    // Inicializa deferredPrompt para su uso más tarde.
+    let deferredPrompt;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Previene a la mini barra de información que aparezca en smartphones
+      e.preventDefault();
+      // Guarda el evento para que se dispare más tarde
+      deferredPrompt = e;
+      // Actualizar la IU para notificarle al usuario que se puede instalar tu PWA
+      showInstallPromotion();
+      // De manera opcional, envía el evento de analíticos para saber si se mostró la promoción a a instalación del PWA
+      console.log(`'beforeinstallprompt' event was fired.`);
+    });
+
+    const handlerInstall = async () => {
+      // Muestre el mensaje de instalación
+      deferredPrompt.prompt();
+      // Espera a que el usuario responda al mensaje
+      const { outcome } = await deferredPrompt.userChoice;
+      // De manera opcional, envía analíticos del resultado que eligió el usuario
+      console.log(`User response to the install prompt: ${outcome}`);
+      // Como ya usamos el mensaje, no lo podemos usar de nuevo, este es descartado
+      deferredPrompt = null;
+    }
+
     StartNotificacion();
 
     if (Original > 0 && BaseOriginal > 0 && BaseFinal > 0) {
@@ -132,6 +157,7 @@ function Share() {
       </header>
       <main>
           <h2 id="result">{ Result ? `Resultado: ${Result}` : '' }</h2>
+          <button onClick={handlerInstall}>Instalar</button>
       </main>
     </React.Fragment>
   );
